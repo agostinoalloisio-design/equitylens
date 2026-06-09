@@ -9,6 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
+
 body{
 margin:0;
 font-family:Inter;
@@ -16,21 +17,42 @@ background:#0b0f14;
 color:white;
 }
 
-<header>
+/* HEADER */
+header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:18px 50px;
+background:#111827;
+border-bottom:1px solid #1f2937;
+position:sticky;
+top:0;
+}
 
-<div class="logo">EquityLens</div>
+.logo{
+font-weight:700;
+color:#3b82f6;
+font-size:18px;
+}
 
-<nav>
-<a href="index.html">Home</a>
-<a href="screener.html">Screener</a>
-<a href="news.html">News</a>
-<a href="groups.html">Groups</a>
-<a href="futures.html">Futures</a>
-<a href="forex.html">Forex</a>
-<a href="crypto.html">Crypto</a>
-</nav>
+nav{
+display:flex;
+gap:18px;
+}
 
-</header>
+nav a{
+color:#9ca3af;
+text-decoration:none;
+font-size:13px;
+padding:6px 10px;
+border-radius:8px;
+transition:0.2s;
+}
+
+nav a:hover{
+color:white;
+background:#1f2937;
+}
 
 /* HERO */
 .hero{
@@ -40,7 +62,6 @@ max-width:900px;
 
 .hero h1{
 font-size:54px;
-line-height:1.05;
 margin-bottom:15px;
 }
 
@@ -81,7 +102,7 @@ cursor:pointer;
 /* MARKET */
 .market{
 display:grid;
-grid-template-columns:repeat(3,1fr);
+grid-template-columns:repeat(4,1fr);
 gap:15px;
 padding:40px 50px;
 }
@@ -91,13 +112,6 @@ background:#111827;
 padding:18px;
 border-radius:12px;
 border:1px solid #1f2937;
-cursor:pointer;
-transition:0.2s;
-}
-
-.card:hover{
-transform:translateY(-3px);
-border-color:#3b82f6;
 }
 
 .card h4{
@@ -136,6 +150,7 @@ color:#6b7280;
 border-top:1px solid #1f2937;
 font-size:13px;
 }
+
 </style>
 
 </head>
@@ -147,7 +162,12 @@ font-size:13px;
 
 <nav>
 <a href="index.html">Home</a>
-<a href="stock.html">Stock Analysis</a>
+<a href="screener.html">Screener</a>
+<a href="news.html">News</a>
+<a href="groups.html">Groups</a>
+<a href="futures.html">Futures</a>
+<a href="forex.html">Forex</a>
+<a href="crypto.html">Crypto</a>
 </nav>
 </header>
 
@@ -155,9 +175,7 @@ font-size:13px;
 
 <h1>Smarter Investing Starts Here</h1>
 
-<p>
-Real-time market data, AI insights and stock scoring system for modern investors.
-</p>
+<p>Real-time market data, AI insights and stock scoring system for modern investors.</p>
 
 <div class="search-box">
 <input placeholder="Cerca azioni (AAPL, TSLA, NVDA...)">
@@ -167,7 +185,6 @@ Real-time market data, AI insights and stock scoring system for modern investors
 </section>
 
 <section class="market">
-
 
 <div class="card">
 <h4>S&P 500</h4>
@@ -202,92 +219,54 @@ Real-time market data, AI insights and stock scoring system for modern investors
 
 <script>
 
-// ===============================
-// VALORI INIZIALI REALISTICI
-// ===============================
+// MARKET SIMULATION
 let sp500 = 4800;
 let nasdaq = 15000;
 let eurusd = 1.09;
 
-// trend leggero (simula mercato vero)
 let spTrend = 0;
 let nqTrend = 0;
 
-// ===============================
-// MOVIMENTO REALISTICO (market-like)
-// ===============================
 function updateIndices(){
 
-// small drift + momentum
 spTrend += (Math.random()-0.5) * 0.3;
 nqTrend += (Math.random()-0.5) * 0.4;
 
 sp500 += spTrend;
 nasdaq += nqTrend;
 
-// limiti per evitare esplosioni
-sp500 = Math.max(4000, Math.min(6000, sp500));
-nasdaq = Math.max(12000, Math.min(20000, nasdaq));
-
-// update UI
-document.getElementById("spy").innerText =
-sp500.toFixed(2);
-
-document.getElementById("qqq").innerText =
-nasdaq.toFixed(2);
+document.getElementById("spy").innerText = sp500.toFixed(2);
+document.getElementById("qqq").innerText = nasdaq.toFixed(2);
 
 }
 
-// ===============================
-// EUR/USD REALE (Frankfurter API - free)
-// ===============================
+// EUR/USD REAL
 async function eurusdPrice(){
-
 try{
 const res = await fetch("https://api.frankfurter.app/latest?from=EUR&to=USD");
 const data = await res.json();
-
-eurusd = data.rates.USD;
-
-document.getElementById("eurusd").innerText =
-eurusd.toFixed(4);
-
-}catch(e){
-console.log("FX error", e);
+document.getElementById("eurusd").innerText = data.rates.USD.toFixed(4);
+}catch(e){}
 }
 
-}
-
-// ===============================
-// BITCOIN REALE
-// ===============================
+// BTC REAL
 async function btc(){
-
 try{
 const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd");
 const data = await res.json();
-
-document.getElementById("btc").innerText =
-"$ " + data.bitcoin.usd.toLocaleString();
-
-}catch(e){
-console.log(e);
+document.getElementById("btc").innerText = "$ " + data.bitcoin.usd.toLocaleString();
+}catch(e){}
 }
 
-}
-
-// ===============================
-// START
-// ===============================
 updateIndices();
 eurusdPrice();
 btc();
 
-// refresh
 setInterval(updateIndices, 1500);
 setInterval(eurusdPrice, 10000);
 setInterval(btc, 8000);
 
 </script>
 
-</script>
+</body>
+</html>
