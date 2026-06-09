@@ -181,19 +181,25 @@ Real-time market data, AI insights and stock scoring system for modern investors
 
 <section class="market">
 
-<div class="card" onclick="go('SPY')">
-<h4>S&P 500 (SPY)</h4>
+
+<div class="card">
+<h4>S&P 500</h4>
 <div class="price green" id="spy">Loading...</div>
 </div>
 
-<div class="card" onclick="go('QQQ')">
-<h4>NASDAQ (QQQ)</h4>
+<div class="card">
+<h4>NASDAQ</h4>
 <div class="price green" id="qqq">Loading...</div>
 </div>
 
 <div class="card">
 <h4>Bitcoin</h4>
 <div class="price green" id="btc">Loading...</div>
+</div>
+
+<div class="card">
+<h4>EUR/USD</h4>
+<div class="price green" id="eurusd">Loading...</div>
 </div>
 
 </section>
@@ -209,25 +215,65 @@ Real-time market data, AI insights and stock scoring system for modern investors
 
 <script>
 
-// prezzi iniziali realistici
-let spy = 480;
-let qqq = 380;
+// ===============================
+// VALORI INIZIALI REALISTICI
+// ===============================
+let sp500 = 4800;
+let nasdaq = 15000;
+let eurusd = 1.09;
 
-// movimento simulato realistico
-function movePrices(){
+// trend leggero (simula mercato vero)
+let spTrend = 0;
+let nqTrend = 0;
 
-spy += (Math.random()-0.5) * 2;
-qqq += (Math.random()-0.5) * 2;
+// ===============================
+// MOVIMENTO REALISTICO (market-like)
+// ===============================
+function updateIndices(){
 
+// small drift + momentum
+spTrend += (Math.random()-0.5) * 0.3;
+nqTrend += (Math.random()-0.5) * 0.4;
+
+sp500 += spTrend;
+nasdaq += nqTrend;
+
+// limiti per evitare esplosioni
+sp500 = Math.max(4000, Math.min(6000, sp500));
+nasdaq = Math.max(12000, Math.min(20000, nasdaq));
+
+// update UI
 document.getElementById("spy").innerText =
-"$ " + spy.toFixed(2);
+sp500.toFixed(2);
 
 document.getElementById("qqq").innerText =
-"$ " + qqq.toFixed(2);
+nasdaq.toFixed(2);
 
 }
 
+// ===============================
+// EUR/USD REALE (Frankfurter API - free)
+// ===============================
+async function eurusdPrice(){
+
+try{
+const res = await fetch("https://api.frankfurter.app/latest?from=EUR&to=USD");
+const data = await res.json();
+
+eurusd = data.rates.USD;
+
+document.getElementById("eurusd").innerText =
+eurusd.toFixed(4);
+
+}catch(e){
+console.log("FX error", e);
+}
+
+}
+
+// ===============================
 // BITCOIN REALE
+// ===============================
 async function btc(){
 
 try{
@@ -235,20 +281,26 @@ const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitco
 const data = await res.json();
 
 document.getElementById("btc").innerText =
-"$ " + data.bitcoin.usd;
+"$ " + data.bitcoin.usd.toLocaleString();
 
 }catch(e){
-console.log("btc error", e);
+console.log(e);
 }
 
 }
 
-// avvio
-movePrices();
+// ===============================
+// START
+// ===============================
+updateIndices();
+eurusdPrice();
 btc();
 
-// update continuo
-setInterval(movePrices, 1500);
+// refresh
+setInterval(updateIndices, 1500);
+setInterval(eurusdPrice, 10000);
 setInterval(btc, 8000);
+
+</script>
 
 </script>
