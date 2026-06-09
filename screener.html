@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Market</title>
+
+<style>
+body{
+margin:0;
+font-family:Inter;
+background:#0b0f14;
+color:white;
+}
+
+header{
+padding:20px;
+background:#111827;
+border-bottom:1px solid #1f2937;
+display:flex;
+justify-content:space-between;
+}
+
+.container{
+padding:30px;
+}
+
+.section-title{
+color:#9ca3af;
+margin-top:30px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:15px;
+margin-top:20px;
+}
+
+.card{
+background:#111827;
+padding:15px;
+border-radius:12px;
+border:1px solid #1f2937;
+cursor:pointer;
+}
+
+.score{
+font-size:20px;
+font-weight:700;
+margin-top:10px;
+}
+
+.green{color:#10b981;}
+.yellow{color:#fbbf24;}
+.red{color:#ef4444;}
+</style>
+</head>
+
+<body>
+
+<header>
+<div>EquityLens Market</div>
+</header>
+
+<div class="container">
+
+<h2 class="section-title">AI Sector Overview</h2>
+
+<div class="grid">
+
+<div class="card">Tech<br><div class="score green">87/100</div></div>
+<div class="card">Finance<br><div class="score yellow">72/100</div></div>
+<div class="card">Energy<br><div class="score red">61/100</div></div>
+
+</div>
+
+<h2 class="section-title">Top Stocks</h2>
+
+<div class="grid">
+
+<div class="card" onclick="openStock('AAPL')">
+AAPL
+<div class="score green">92/100</div>
+</div>
+
+<div class="card" onclick="openStock('TSLA')">
+TSLA
+<div class="score yellow">78/100</div>
+</div>
+
+<div class="card" onclick="openStock('NVDA')">
+NVDA
+<div class="score green">95/100</div>
+</div>
+
+<div class="card" onclick="openStock('MSFT')">
+MSFT
+<div class="score green">90/100</div>
+</div>
+
+</div>
+
+</div>
+
+<script>
+function openStock(symbol){
+window.location.href="stock.html?symbol="+symbol;
+}
+</script>
+
+</body>
+</html>
+symbol + " mostra forte interesse retail e momentum nel settore tech.";
+
+</script>
+
+</body>
+</html>
