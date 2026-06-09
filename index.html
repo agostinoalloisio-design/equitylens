@@ -209,43 +209,46 @@ Real-time market data, AI insights and stock scoring system for modern investors
 
 <script>
 
-// CLICK NAV
-function go(symbol){
-window.location.href="stock.html?symbol="+symbol;
+// prezzi iniziali realistici
+let spy = 480;
+let qqq = 380;
+
+// movimento simulato realistico
+function movePrices(){
+
+spy += (Math.random()-0.5) * 2;
+qqq += (Math.random()-0.5) * 2;
+
+document.getElementById("spy").innerText =
+"$ " + spy.toFixed(2);
+
+document.getElementById("qqq").innerText =
+"$ " + qqq.toFixed(2);
+
 }
 
-// REAL DATA (FREE)
-async function loadData(){
+// BITCOIN REALE
+async function btc(){
 
 try{
+const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd");
+const data = await res.json();
 
-// SPY
-let spy = await fetch("https://finnhub.io/api/v1/quote?symbol=SPY&token=demo");
-let s = await spy.json();
-document.getElementById("spy").innerText = "$ " + s.c;
-
-// QQQ
-let qqq = await fetch("https://finnhub.io/api/v1/quote?symbol=QQQ&token=demo");
-let q = await qqq.json();
-document.getElementById("qqq").innerText = "$ " + q.c;
-
-// BTC
-let btc = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd");
-let b = await btc.json();
-document.getElementById("btc").innerText = "$ " + b.bitcoin.usd;
+document.getElementById("btc").innerText =
+"$ " + data.bitcoin.usd;
 
 }catch(e){
-console.log(e);
+console.log("btc error", e);
 }
 
 }
 
-loadData();
-setInterval(loadData, 10000);
+// avvio
+movePrices();
+btc();
+
+// update continuo
+setInterval(movePrices, 1500);
+setInterval(btc, 8000);
 
 </script>
-
-</body>
-</html>
-</body>
-</html>
