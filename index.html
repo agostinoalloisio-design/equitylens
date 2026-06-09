@@ -22,11 +22,12 @@ header{
 display:flex;
 justify-content:space-between;
 align-items:center;
-padding:18px 50px;
+padding:16px 50px;
 background:#111827;
 border-bottom:1px solid #1f2937;
 position:sticky;
 top:0;
+z-index:10;
 }
 
 .logo{
@@ -37,7 +38,8 @@ font-size:18px;
 
 nav{
 display:flex;
-gap:18px;
+gap:14px;
+flex-wrap:wrap;
 }
 
 nav a{
@@ -50,8 +52,8 @@ transition:0.2s;
 }
 
 nav a:hover{
-color:white;
 background:#1f2937;
+color:white;
 }
 
 /* HERO */
@@ -61,25 +63,26 @@ max-width:900px;
 }
 
 .hero h1{
-font-size:54px;
-margin-bottom:15px;
+font-size:56px;
+margin-bottom:10px;
 }
 
 .hero p{
 color:#9ca3af;
 font-size:18px;
 max-width:650px;
+line-height:1.5;
 }
 
 /* SEARCH */
-.search-box{
-margin-top:30px;
+.search{
+margin-top:25px;
 display:flex;
-gap:12px;
+gap:10px;
 max-width:600px;
 }
 
-.search-box input{
+.search input{
 flex:1;
 padding:14px;
 border-radius:12px;
@@ -89,10 +92,10 @@ color:white;
 outline:none;
 }
 
-.search-box button{
+.search button{
 padding:14px 18px;
-border-radius:12px;
 border:none;
+border-radius:12px;
 background:#3b82f6;
 color:white;
 font-weight:600;
@@ -103,21 +106,21 @@ cursor:pointer;
 .market{
 display:grid;
 grid-template-columns:repeat(4,1fr);
-gap:15px;
+gap:14px;
 padding:40px 50px;
 }
 
 .card{
 background:#111827;
-padding:18px;
-border-radius:12px;
 border:1px solid #1f2937;
+border-radius:12px;
+padding:16px;
 }
 
 .card h4{
 color:#9ca3af;
 font-size:13px;
-margin-bottom:8px;
+margin-bottom:6px;
 }
 
 .price{
@@ -126,7 +129,6 @@ font-weight:600;
 }
 
 .green{color:#10b981;}
-.red{color:#ef4444;}
 
 /* CTA */
 .cta{
@@ -158,6 +160,7 @@ font-size:13px;
 <body>
 
 <header>
+
 <div class="logo">EquityLens</div>
 
 <nav>
@@ -169,17 +172,21 @@ font-size:13px;
 <a href="forex.html">Forex</a>
 <a href="crypto.html">Crypto</a>
 </nav>
+
 </header>
 
 <section class="hero">
 
-<h1>Smarter Investing Starts Here</h1>
+<h1>Investing Intelligence Platform</h1>
 
-<p>Real-time market data, AI insights and stock scoring system for modern investors.</p>
+<p>
+Analisi azioni, mercati globali e dati finanziari in tempo reale.
+Dashboard progettata per investitori moderni.
+</p>
 
-<div class="search-box">
-<input placeholder="Cerca azioni (AAPL, TSLA, NVDA...)">
-<button onclick="window.location.href='stock.html'">Cerca azioni</button>
+<div class="search">
+<input placeholder="Cerca azioni (AAPL, TSLA, NVDA)">
+<button onclick="window.location.href='screener.html'">Cerca</button>
 </div>
 
 </section>
@@ -188,12 +195,12 @@ font-size:13px;
 
 <div class="card">
 <h4>S&P 500</h4>
-<div class="price green" id="spy">Loading...</div>
+<div class="price green" id="spx">Loading...</div>
 </div>
 
 <div class="card">
 <h4>NASDAQ</h4>
-<div class="price green" id="qqq">Loading...</div>
+<div class="price green" id="ndx">Loading...</div>
 </div>
 
 <div class="card">
@@ -203,68 +210,62 @@ font-size:13px;
 
 <div class="card">
 <h4>EUR/USD</h4>
-<div class="price green" id="eurusd">Loading...</div>
+<div class="price green" id="fx">Loading...</div>
 </div>
 
 </section>
 
 <section class="cta">
 <h2>Analisi professionale in tempo reale</h2>
-<p>Score 1–100, trend di mercato e dati finanziari aggiornati automaticamente.</p>
+<p>Score, trend e dati finanziari aggiornati automaticamente.</p>
 </section>
 
 <footer>
-© 2025 EquityLens — Financial Intelligence Platform
+© 2025 EquityLens
 </footer>
 
 <script>
 
-// MARKET SIMULATION
-let sp500 = 4800;
-let nasdaq = 15000;
-let eurusd = 1.09;
+// MOVIMENTO REALISTICO (NON RANDOM BRUTTO)
+let spx = 4800;
+let ndx = 15000;
+let trend1 = 0;
+let trend2 = 0;
 
-let spTrend = 0;
-let nqTrend = 0;
+function updateMarkets(){
 
-function updateIndices(){
+trend1 += (Math.random()-0.5)*0.4;
+trend2 += (Math.random()-0.5)*0.6;
 
-spTrend += (Math.random()-0.5) * 0.3;
-nqTrend += (Math.random()-0.5) * 0.4;
+spx += trend1;
+ndx += trend2;
 
-sp500 += spTrend;
-nasdaq += nqTrend;
+document.getElementById("spx").innerText = spx.toFixed(2);
+document.getElementById("ndx").innerText = ndx.toFixed(2);
 
-document.getElementById("spy").innerText = sp500.toFixed(2);
-document.getElementById("qqq").innerText = nasdaq.toFixed(2);
-
-}
-
-// EUR/USD REAL
-async function eurusdPrice(){
-try{
-const res = await fetch("https://api.frankfurter.app/latest?from=EUR&to=USD");
-const data = await res.json();
-document.getElementById("eurusd").innerText = data.rates.USD.toFixed(4);
-}catch(e){}
 }
 
 // BTC REAL
 async function btc(){
-try{
-const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd");
-const data = await res.json();
-document.getElementById("btc").innerText = "$ " + data.bitcoin.usd.toLocaleString();
-}catch(e){}
+const r = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd");
+const d = await r.json();
+document.getElementById("btc").innerText = "$ " + d.bitcoin.usd.toLocaleString();
 }
 
-updateIndices();
-eurusdPrice();
-btc();
+// EUR/USD REAL
+async function fx(){
+const r = await fetch("https://api.frankfurter.app/latest?from=EUR&to=USD");
+const d = await r.json();
+document.getElementById("fx").innerText = d.rates.USD.toFixed(4);
+}
 
-setInterval(updateIndices, 1500);
-setInterval(eurusdPrice, 10000);
+updateMarkets();
+btc();
+fx();
+
+setInterval(updateMarkets, 1200);
 setInterval(btc, 8000);
+setInterval(fx, 10000);
 
 </script>
 
