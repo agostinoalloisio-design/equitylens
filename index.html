@@ -10,41 +10,45 @@
 
 <style>
 
-/* ======================
-   BASE
-====================== */
-body{
+/* =======================
+   RESET BASE
+======================= */
+*{
 margin:0;
+padding:0;
+box-sizing:border-box;
 font-family:Inter;
+}
+
+body{
 background:#0b0f14;
 color:white;
 }
 
-/* ======================
-   HEADER
-====================== */
+/* =======================
+   HEADER CLEAN
+======================= */
 header{
 display:flex;
 justify-content:space-between;
 align-items:center;
-padding:16px 40px;
+padding:14px 40px;
 background:#111827;
 border-bottom:1px solid #1f2937;
 position:sticky;
 top:0;
-z-index:100;
+z-index:1000;
 }
 
 .logo{
-font-weight:700;
 font-size:18px;
+font-weight:700;
 color:#3b82f6;
-letter-spacing:0.3px;
 }
 
 nav{
 display:flex;
-gap:14px;
+gap:10px;
 flex-wrap:wrap;
 }
 
@@ -62,31 +66,28 @@ background:#1f2937;
 color:white;
 }
 
-/* ======================
+/* =======================
    HERO
-====================== */
+======================= */
 .hero{
 padding:70px 40px 30px;
 max-width:900px;
 }
 
 .hero h1{
-font-size:54px;
-margin:0 0 10px 0;
-line-height:1.1;
+font-size:52px;
+margin-bottom:10px;
 }
 
 .hero p{
 color:#9ca3af;
 font-size:18px;
-max-width:650px;
+max-width:600px;
 line-height:1.5;
 margin-bottom:25px;
 }
 
-/* ======================
-   SEARCH
-====================== */
+/* SEARCH */
 .search{
 display:flex;
 gap:10px;
@@ -104,7 +105,7 @@ outline:none;
 }
 
 .search button{
-padding:14px 18px;
+padding:14px 16px;
 border:none;
 border-radius:12px;
 background:#3b82f6;
@@ -113,13 +114,13 @@ font-weight:600;
 cursor:pointer;
 }
 
-/* ======================
+/* =======================
    MARKET GRID
-====================== */
+======================= */
 .market{
 display:grid;
 grid-template-columns:repeat(4,1fr);
-gap:14px;
+gap:12px;
 padding:40px;
 }
 
@@ -137,9 +138,9 @@ border-color:#3b82f6;
 }
 
 .card h4{
-margin:0 0 6px 0;
 font-size:13px;
 color:#9ca3af;
+margin-bottom:6px;
 }
 
 .price{
@@ -149,26 +150,26 @@ font-weight:600;
 
 .green{color:#10b981;}
 
-/* ======================
+/* =======================
    CTA
-====================== */
+======================= */
 .cta{
 text-align:center;
 padding:50px 20px;
 }
 
 .cta h2{
-font-size:26px;
-margin-bottom:10px;
+font-size:24px;
+margin-bottom:8px;
 }
 
 .cta p{
 color:#9ca3af;
 }
 
-/* ======================
+/* =======================
    FOOTER
-====================== */
+======================= */
 footer{
 text-align:center;
 padding:30px;
@@ -183,7 +184,7 @@ border-top:1px solid #1f2937;
 
 <body>
 
-<!-- HEADER PULITO -->
+<!-- HEADER -->
 <header>
 
 <div class="logo">EquityLens</div>
@@ -207,7 +208,7 @@ border-top:1px solid #1f2937;
 
 <p>
 Analisi azioni, mercati globali e dati finanziari in tempo reale.
-Una dashboard moderna per investitori retail.
+Una piattaforma moderna per investitori retail.
 </p>
 
 <div class="search">
@@ -244,20 +245,20 @@ Una dashboard moderna per investitori retail.
 
 <!-- CTA -->
 <section class="cta">
-<h2>Analisi professionale in tempo reale</h2>
-<p>Score, trend e dati finanziari aggiornati automaticamente.</p>
+<h2>Dati di mercato in tempo reale</h2>
+<p>Analisi automatica, prezzi live e dashboard professionale.</p>
 </section>
 
 <!-- FOOTER -->
 <footer>
-© 2025 EquityLens — Financial Intelligence Platform
+© 2025 EquityLens
 </footer>
 
 <script>
 
-/* ======================
-   MARKET SIMULATION
-====================== */
+/* =======================
+   SIMULAZIONE INDICI
+======================= */
 let spx = 4800;
 let ndx = 15000;
 let trend1 = 0;
@@ -265,8 +266,8 @@ let trend2 = 0;
 
 function updateMarkets(){
 
-trend1 += (Math.random()-0.5)*0.4;
-trend2 += (Math.random()-0.5)*0.6;
+trend1 += (Math.random()-0.5)*0.35;
+trend2 += (Math.random()-0.5)*0.45;
 
 spx += trend1;
 ndx += trend2;
@@ -276,18 +277,18 @@ document.getElementById("ndx").innerText = ndx.toFixed(2);
 
 }
 
-/* ======================
-   BITCOIN REAL
-====================== */
+/* =======================
+   BITCOIN LIVE
+======================= */
 async function btc(){
 const r = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd");
 const d = await r.json();
 document.getElementById("btc").innerText = "$ " + d.bitcoin.usd.toLocaleString();
 }
 
-/* ======================
-   EUR/USD REAL
-====================== */
+/* =======================
+   EUR/USD LIVE
+======================= */
 async function fx(){
 const r = await fetch("https://api.frankfurter.app/latest?from=EUR&to=USD");
 const d = await r.json();
@@ -299,7 +300,7 @@ updateMarkets();
 btc();
 fx();
 
-/* LIVE UPDATES */
+/* LOOP LIVE */
 setInterval(updateMarkets, 1200);
 setInterval(btc, 8000);
 setInterval(fx, 10000);
