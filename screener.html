@@ -11,7 +11,10 @@
 
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter;}
 
-body{background:#0b0f14;color:white;}
+body{
+background:#0b0f14;
+color:white;
+}
 
 /* HEADER */
 header{
@@ -23,25 +26,41 @@ background:#111827;
 border-bottom:1px solid #1f2937;
 position:sticky;
 top:0;
+z-index:10;
 }
 
-.logo{color:#3b82f6;font-weight:700;}
+.logo{
+color:#3b82f6;
+font-weight:700;
+}
+
+nav{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+}
 
 nav a{
 color:#9ca3af;
 text-decoration:none;
-margin-left:10px;
 font-size:13px;
+padding:6px 10px;
+border-radius:8px;
 }
 
-nav a:hover{color:white;}
+nav a:hover{
+background:#1f2937;
+color:white;
+}
 
 /* LAYOUT */
-.container{display:flex;}
+.container{
+display:flex;
+}
 
 /* SIDEBAR */
 .sidebar{
-width:240px;
+width:230px;
 padding:20px;
 border-right:1px solid #1f2937;
 min-height:100vh;
@@ -54,16 +73,23 @@ background:#111827;
 border-radius:8px;
 cursor:pointer;
 font-size:13px;
-transition:.2s;
 }
 
-.sector:hover{background:#1f2937;}
+.sector:hover{
+background:#1f2937;
+}
 
 /* MAIN */
-.main{flex:1;padding:20px;}
+.main{
+flex:1;
+padding:20px;
+}
 
 /* TABLE */
-table{width:100%;border-collapse:collapse;}
+table{
+width:100%;
+border-collapse:collapse;
+}
 
 th,td{
 padding:12px;
@@ -72,37 +98,40 @@ font-size:13px;
 text-align:left;
 }
 
-th{color:#9ca3af;}
+th{
+color:#9ca3af;
+}
 
-tr:hover{background:#111827;cursor:pointer;}
+tr:hover{
+background:#111827;
+cursor:pointer;
+}
 
-/* SCORES */
+/* COLORS */
 .green{color:#10b981;font-weight:600;}
 .yellow{color:#fbbf24;font-weight:600;}
 .red{color:#ef4444;font-weight:600;}
-
-.badge{
-padding:4px 8px;
-border-radius:6px;
-font-size:12px;
-}
-
-.hidden{display:none;}
 
 </style>
 </head>
 
 <body>
 
+<!-- HEADER -->
 <header>
-<div class="logo">EquityLens Screener</div>
+
+<div class="logo">EquityLens</div>
 
 <nav>
 <a href="index.html">Home</a>
 <a href="screener.html">Screener</a>
-<a href="#">News</a>
-<a href="#">Crypto</a>
+<a href="news.html">News</a>
+<a href="groups.html">Groups</a>
+<a href="futures.html">Futures</a>
+<a href="forex.html">Forex</a>
+<a href="crypto.html">Crypto</a>
 </nav>
+
 </header>
 
 <div class="container">
@@ -110,13 +139,12 @@ font-size:12px;
 <!-- SIDEBAR -->
 <div class="sidebar">
 
-<div class="sector" onclick="filterSector('all')">📊 All Stocks</div>
-
-<div class="sector" onclick="filterSector('Tech')">💻 Technology</div>
-<div class="sector" onclick="filterSector('Finance')">🏦 Financial</div>
-<div class="sector" onclick="filterSector('Healthcare')">🧬 Healthcare</div>
-<div class="sector" onclick="filterSector('Energy')">⚡ Energy</div>
-<div class="sector" onclick="filterSector('Consumer')">🛒 Consumer</div>
+<div class="sector" onclick="filter('all')">📊 All</div>
+<div class="sector" onclick="filter('Tech')">💻 Tech</div>
+<div class="sector" onclick="filter('Finance')">🏦 Finance</div>
+<div class="sector" onclick="filter('Health')">🧬 Health</div>
+<div class="sector" onclick="filter('Energy')">⚡ Energy</div>
+<div class="sector" onclick="filter('Consumer')">🛒 Consumer</div>
 
 </div>
 
@@ -139,9 +167,7 @@ font-size:12px;
 </tr>
 </thead>
 
-<tbody id="table">
-
-</tbody>
+<tbody id="table"></tbody>
 
 </table>
 
@@ -151,93 +177,121 @@ font-size:12px;
 
 <script>
 
+const API = "INSERISCI_LA_TUA_API_KEY";
+
+let filterState = "all";
+
 const stocks = [
+{t:"NVDA",n:"NVIDIA",s:"Tech"},
+{t:"MSFT",n:"Microsoft",s:"Tech"},
+{t:"AAPL",n:"Apple",s:"Tech"},
+{t:"GOOGL",n:"Google",s:"Tech"},
+{t:"META",n:"Meta",s:"Tech"},
+{t:"AMD",n:"AMD",s:"Tech"},
 
-/* ================= TECH ================= */
-{t:"NVDA",n:"NVIDIA",s:"Tech",p:480,f:95,tc:92,m:96,se:93},
-{t:"MSFT",n:"Microsoft",s:"Tech",p:420,f:92,tc:90,m:88,se:91},
-{t:"AAPL",n:"Apple",s:"Tech",p:210,f:85,tc:82,m:80,se:88},
-{t:"GOOGL",n:"Google",s:"Tech",p:165,f:88,tc:85,m:82,se:87},
-{t:"META",n:"Meta",s:"Tech",p:470,f:90,tc:88,m:91,se:89},
-{t:"AMD",n:"AMD",s:"Tech",p:155,f:83,tc:80,m:85,se:82},
-{t:"INTC",n:"Intel",s:"Tech",p:38,f:70,tc:65,m:60,se:68},
-{t:"AVGO",n:"Broadcom",s:"Tech",p:1250,f:94,tc:91,m:93,se:92},
-{t:"TSM",n:"TSMC",s:"Tech",p:180,f:93,tc:90,m:92,se:91},
-{t:"ORCL",n:"Oracle",s:"Tech",p:120,f:86,tc:84,m:80,se:85},
+{t:"JPM",n:"JPMorgan",s:"Finance"},
+{t:"V",n:"Visa",s:"Finance"},
+{t:"MA",n:"Mastercard",s:"Finance"},
+{t:"GS",n:"Goldman",s:"Finance"},
 
-/* ================= FINANCE ================= */
-{t:"JPM",n:"JPMorgan",s:"Finance",p:185,f:90,tc:85,m:82,se:88},
-{t:"BAC",n:"Bank of America",s:"Finance",p:38,f:82,tc:78,m:75,se:80},
-{t:"GS",n:"Goldman Sachs",s:"Finance",p:390,f:91,tc:87,m:84,se:89},
-{t:"V",n:"Visa",s:"Finance",p:270,f:93,tc:89,m:90,se:92},
-{t:"MA",n:"Mastercard",s:"Finance",p:455,f:92,tc:90,m:91,se:93},
+{t:"JNJ",n:"Johnson",s:"Health"},
+{t:"PFE",n:"Pfizer",s:"Health"},
+{t:"UNH",n:"UnitedHealth",s:"Health"},
 
-/* ================= HEALTH ================= */
-{t:"PFE",n:"Pfizer",s:"Healthcare",p:28,f:75,tc:70,m:65,se:72},
-{t:"JNJ",n:"Johnson & Johnson",s:"Healthcare",p:160,f:88,tc:84,m:80,se:87},
-{t:"MRNA",n:"Moderna",s:"Healthcare",p:95,f:80,tc:78,m:82,se:79},
-{t:"UNH",n:"UnitedHealth",s:"Healthcare",p:520,f:92,tc:88,m:86,se:91},
+{t:"XOM",n:"Exxon",s:"Energy"},
+{t:"CVX",n:"Chevron",s:"Energy"},
 
-/* ================= ENERGY ================= */
-{t:"XOM",n:"Exxon Mobil",s:"Energy",p:110,f:87,tc:83,m:80,se:85},
-{t:"CVX",n:"Chevron",s:"Energy",p:150,f:88,tc:84,m:82,se:86},
-
-/* ================= CONSUMER ================= */
-{t:"AMZN",n:"Amazon",s:"Consumer",p:185,f:91,tc:89,m:88,se:90},
-{t:"TSLA",n:"Tesla",s:"Consumer",p:245,f:78,tc:70,m:75,se:72},
-{t:"NKE",n:"Nike",s:"Consumer",p:95,f:84,tc:80,m:78,se:83},
-{t:"MCD",n:"McDonald's",s:"Consumer",p:285,f:90,tc:86,m:84,se:88},
-
+{t:"AMZN",n:"Amazon",s:"Consumer"},
+{t:"TSLA",n:"Tesla",s:"Consumer"},
+{t:"NKE",n:"Nike",s:"Consumer"},
+{t:"MCD",n:"McDonalds",s:"Consumer"},
 ];
 
-let current = "all";
+// prezzi live cache
+let priceData = {};
 
-function scoreColor(v){
+async function loadPrice(symbol){
+
+try{
+
+const r = await fetch(
+`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${API}`
+);
+
+const d = await r.json();
+
+priceData[symbol] = d.c;
+
+}catch(e){
+
+priceData[symbol] = null;
+
+}
+
+}
+
+function score(){
+return Math.floor(70 + Math.random()*25);
+}
+
+function color(v){
 if(v>=85) return "green";
 if(v>=70) return "yellow";
 return "red";
 }
 
-function render(){
+async function render(){
 
 const table = document.getElementById("table");
 table.innerHTML = "";
 
+// carica prezzi
+for(let s of stocks){
+await loadPrice(s.t);
+}
+
 stocks
-.filter(s => current==="all" || s.s===current)
+.filter(s => filterState==="all" || s.s===filterState)
 .forEach(s=>{
 
-const score = Math.round((s.f+s.tc+s.m+s.se)/4);
+let p = priceData[s.t] || 0;
+
+let sc = score();
 
 table.innerHTML += `
-<tr onclick="go('${s.t}')">
+<tr onclick="openStock('${s.t}')">
 <td>${s.t}</td>
 <td>${s.n}</td>
 <td>${s.s}</td>
-<td>$${s.p}</td>
-<td class="${scoreColor(s.f)}">${s.f}</td>
-<td class="${scoreColor(s.tc)}">${s.tc}</td>
-<td class="${scoreColor(s.m)}">${s.m}</td>
-<td class="${scoreColor(s.se)}">${s.se}</td>
-<td class="${scoreColor(score)}">${score}</td>
+<td>$ ${p.toFixed(2)}</td>
+<td class="${color(sc)}">${sc}</td>
+<td class="${color(sc-3)}">${sc-3}</td>
+<td class="${color(sc+2)}">${sc+2}</td>
+<td class="${color(sc-1)}">${sc-1}</td>
+<td class="${color(sc)}">${sc}</td>
 </tr>
 `;
+
 });
 
 }
 
-function filterSector(sec){
-current = sec;
+function filter(f){
+filterState = f;
 render();
 }
 
-function go(ticker){
-window.location.href = "stock.html?ticker=" + ticker;
+function openStock(t){
+window.location.href = "stock.html?ticker=" + t;
 }
 
+// auto refresh
 render();
+setInterval(render, 20000);
 
 </script>
 
+</body>
+</html>
 </body>
 </html>
