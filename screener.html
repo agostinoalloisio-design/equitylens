@@ -3,137 +3,80 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EquityLens - Screener</title>
+<title>EquityLens Screener</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Inter;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter;}
 
-body{
-background:#0b0f14;
-color:white;
-}
+body{background:#0b0f14;color:white;}
 
 /* HEADER */
 header{
 display:flex;
 justify-content:space-between;
 align-items:center;
-padding:14px 40px;
+padding:14px 30px;
 background:#111827;
 border-bottom:1px solid #1f2937;
 position:sticky;
 top:0;
 }
 
-.logo{
-color:#3b82f6;
-font-weight:700;
-}
+.logo{color:#3b82f6;font-weight:700;}
 
 nav a{
 color:#9ca3af;
 text-decoration:none;
-margin-left:12px;
+margin-left:10px;
 font-size:13px;
 }
 
-nav a:hover{
-color:white;
-}
+nav a:hover{color:white;}
 
 /* LAYOUT */
-.container{
-display:flex;
-}
+.container{display:flex;}
 
 /* SIDEBAR */
 .sidebar{
-width:220px;
+width:240px;
 padding:20px;
 border-right:1px solid #1f2937;
 min-height:100vh;
 }
 
-.sidebar h3{
-font-size:13px;
-color:#9ca3af;
-margin-bottom:10px;
-}
-
 .sector{
-padding:8px;
-margin-bottom:6px;
+padding:10px;
+margin-bottom:8px;
 background:#111827;
 border-radius:8px;
 cursor:pointer;
 font-size:13px;
+transition:.2s;
 }
 
-.sector:hover{
-background:#1f2937;
-}
+.sector:hover{background:#1f2937;}
 
 /* MAIN */
-.main{
-flex:1;
-padding:20px;
-}
-
-.search{
-display:flex;
-gap:10px;
-margin-bottom:20px;
-}
-
-.search input{
-flex:1;
-padding:12px;
-border-radius:10px;
-border:1px solid #1f2937;
-background:#111827;
-color:white;
-}
-
-.search button{
-padding:12px 16px;
-border:none;
-background:#2563eb;
-color:white;
-border-radius:10px;
-cursor:pointer;
-}
+.main{flex:1;padding:20px;}
 
 /* TABLE */
-table{
-width:100%;
-border-collapse:collapse;
-}
+table{width:100%;border-collapse:collapse;}
 
-th, td{
+th,td{
 padding:12px;
 border-bottom:1px solid #1f2937;
 font-size:13px;
 text-align:left;
 }
 
-th{
-color:#9ca3af;
-}
+th{color:#9ca3af;}
 
-tr:hover{
-background:#111827;
-cursor:pointer;
-}
+tr:hover{background:#111827;cursor:pointer;}
 
-/* SCORE COLORS */
+/* SCORES */
 .green{color:#10b981;font-weight:600;}
 .yellow{color:#fbbf24;font-weight:600;}
 .red{color:#ef4444;font-weight:600;}
@@ -143,6 +86,8 @@ padding:4px 8px;
 border-radius:6px;
 font-size:12px;
 }
+
+.hidden{display:none;}
 
 </style>
 </head>
@@ -155,11 +100,8 @@ font-size:12px;
 <nav>
 <a href="index.html">Home</a>
 <a href="screener.html">Screener</a>
-<a href="news.html">News</a>
-<a href="groups.html">Groups</a>
-<a href="futures.html">Futures</a>
-<a href="forex.html">Forex</a>
-<a href="crypto.html">Crypto</a>
+<a href="#">News</a>
+<a href="#">Crypto</a>
 </nav>
 </header>
 
@@ -167,23 +109,19 @@ font-size:12px;
 
 <!-- SIDEBAR -->
 <div class="sidebar">
-<h3>Settori</h3>
 
-<div class="sector">Technology</div>
-<div class="sector">Healthcare</div>
-<div class="sector">Financial</div>
-<div class="sector">Energy</div>
-<div class="sector">Consumer</div>
-<div class="sector">Industrials</div>
+<div class="sector" onclick="filterSector('all')">📊 All Stocks</div>
+
+<div class="sector" onclick="filterSector('Tech')">💻 Technology</div>
+<div class="sector" onclick="filterSector('Finance')">🏦 Financial</div>
+<div class="sector" onclick="filterSector('Healthcare')">🧬 Healthcare</div>
+<div class="sector" onclick="filterSector('Energy')">⚡ Energy</div>
+<div class="sector" onclick="filterSector('Consumer')">🛒 Consumer</div>
+
 </div>
 
 <!-- MAIN -->
 <div class="main">
-
-<div class="search">
-<input placeholder="Cerca azione (AAPL, TSLA...)">
-<button>Search</button>
-</div>
 
 <table>
 
@@ -195,61 +133,13 @@ font-size:12px;
 <th>Prezzo</th>
 <th>Fund</th>
 <th>Tech</th>
-<th>Momentum</th>
-<th>Sentiment</th>
+<th>Mom</th>
+<th>Sent</th>
 <th>Score</th>
 </tr>
 </thead>
 
-<tbody>
-
-<tr onclick="openStock('NVDA')">
-<td>NVDA</td>
-<td>NVIDIA</td>
-<td>Tech</td>
-<td>$480</td>
-<td class="green">95</td>
-<td class="green">92</td>
-<td class="green">96</td>
-<td class="green">93</td>
-<td class="green">94</td>
-</tr>
-
-<tr onclick="openStock('MSFT')">
-<td>MSFT</td>
-<td>Microsoft</td>
-<td>Tech</td>
-<td>$420</td>
-<td class="green">92</td>
-<td class="green">90</td>
-<td class="green">88</td>
-<td class="green">91</td>
-<td class="green">90</td>
-</tr>
-
-<tr onclick="openStock('AAPL')">
-<td>AAPL</td>
-<td>Apple</td>
-<td>Tech</td>
-<td>$210</td>
-<td class="yellow">85</td>
-<td class="yellow">82</td>
-<td class="yellow">80</td>
-<td class="green">88</td>
-<td class="yellow">84</td>
-</tr>
-
-<tr onclick="openStock('TSLA')">
-<td>TSLA</td>
-<td>Tesla</td>
-<td>Auto</td>
-<td>$245</td>
-<td class="yellow">78</td>
-<td class="red">70</td>
-<td class="yellow">75</td>
-<td class="yellow">72</td>
-<td class="yellow">74</td>
-</tr>
+<tbody id="table">
 
 </tbody>
 
@@ -261,9 +151,91 @@ font-size:12px;
 
 <script>
 
-function openStock(ticker){
+const stocks = [
+
+/* ================= TECH ================= */
+{t:"NVDA",n:"NVIDIA",s:"Tech",p:480,f:95,tc:92,m:96,se:93},
+{t:"MSFT",n:"Microsoft",s:"Tech",p:420,f:92,tc:90,m:88,se:91},
+{t:"AAPL",n:"Apple",s:"Tech",p:210,f:85,tc:82,m:80,se:88},
+{t:"GOOGL",n:"Google",s:"Tech",p:165,f:88,tc:85,m:82,se:87},
+{t:"META",n:"Meta",s:"Tech",p:470,f:90,tc:88,m:91,se:89},
+{t:"AMD",n:"AMD",s:"Tech",p:155,f:83,tc:80,m:85,se:82},
+{t:"INTC",n:"Intel",s:"Tech",p:38,f:70,tc:65,m:60,se:68},
+{t:"AVGO",n:"Broadcom",s:"Tech",p:1250,f:94,tc:91,m:93,se:92},
+{t:"TSM",n:"TSMC",s:"Tech",p:180,f:93,tc:90,m:92,se:91},
+{t:"ORCL",n:"Oracle",s:"Tech",p:120,f:86,tc:84,m:80,se:85},
+
+/* ================= FINANCE ================= */
+{t:"JPM",n:"JPMorgan",s:"Finance",p:185,f:90,tc:85,m:82,se:88},
+{t:"BAC",n:"Bank of America",s:"Finance",p:38,f:82,tc:78,m:75,se:80},
+{t:"GS",n:"Goldman Sachs",s:"Finance",p:390,f:91,tc:87,m:84,se:89},
+{t:"V",n:"Visa",s:"Finance",p:270,f:93,tc:89,m:90,se:92},
+{t:"MA",n:"Mastercard",s:"Finance",p:455,f:92,tc:90,m:91,se:93},
+
+/* ================= HEALTH ================= */
+{t:"PFE",n:"Pfizer",s:"Healthcare",p:28,f:75,tc:70,m:65,se:72},
+{t:"JNJ",n:"Johnson & Johnson",s:"Healthcare",p:160,f:88,tc:84,m:80,se:87},
+{t:"MRNA",n:"Moderna",s:"Healthcare",p:95,f:80,tc:78,m:82,se:79},
+{t:"UNH",n:"UnitedHealth",s:"Healthcare",p:520,f:92,tc:88,m:86,se:91},
+
+/* ================= ENERGY ================= */
+{t:"XOM",n:"Exxon Mobil",s:"Energy",p:110,f:87,tc:83,m:80,se:85},
+{t:"CVX",n:"Chevron",s:"Energy",p:150,f:88,tc:84,m:82,se:86},
+
+/* ================= CONSUMER ================= */
+{t:"AMZN",n:"Amazon",s:"Consumer",p:185,f:91,tc:89,m:88,se:90},
+{t:"TSLA",n:"Tesla",s:"Consumer",p:245,f:78,tc:70,m:75,se:72},
+{t:"NKE",n:"Nike",s:"Consumer",p:95,f:84,tc:80,m:78,se:83},
+{t:"MCD",n:"McDonald's",s:"Consumer",p:285,f:90,tc:86,m:84,se:88},
+
+];
+
+let current = "all";
+
+function scoreColor(v){
+if(v>=85) return "green";
+if(v>=70) return "yellow";
+return "red";
+}
+
+function render(){
+
+const table = document.getElementById("table");
+table.innerHTML = "";
+
+stocks
+.filter(s => current==="all" || s.s===current)
+.forEach(s=>{
+
+const score = Math.round((s.f+s.tc+s.m+s.se)/4);
+
+table.innerHTML += `
+<tr onclick="go('${s.t}')">
+<td>${s.t}</td>
+<td>${s.n}</td>
+<td>${s.s}</td>
+<td>$${s.p}</td>
+<td class="${scoreColor(s.f)}">${s.f}</td>
+<td class="${scoreColor(s.tc)}">${s.tc}</td>
+<td class="${scoreColor(s.m)}">${s.m}</td>
+<td class="${scoreColor(s.se)}">${s.se}</td>
+<td class="${scoreColor(score)}">${score}</td>
+</tr>
+`;
+});
+
+}
+
+function filterSector(sec){
+current = sec;
+render();
+}
+
+function go(ticker){
 window.location.href = "stock.html?ticker=" + ticker;
 }
+
+render();
 
 </script>
 
