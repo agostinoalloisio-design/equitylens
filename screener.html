@@ -3,115 +3,267 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Market</title>
+<title>EquityLens - Screener</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-body{
+
+*{
 margin:0;
+padding:0;
+box-sizing:border-box;
 font-family:Inter;
+}
+
+body{
 background:#0b0f14;
 color:white;
 }
 
+/* HEADER */
 header{
-padding:20px;
-background:#111827;
-border-bottom:1px solid #1f2937;
 display:flex;
 justify-content:space-between;
-}
-
-.container{
-padding:30px;
-}
-
-.section-title{
-color:#9ca3af;
-margin-top:30px;
-}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:15px;
-margin-top:20px;
-}
-
-.card{
+align-items:center;
+padding:14px 40px;
 background:#111827;
-padding:15px;
-border-radius:12px;
+border-bottom:1px solid #1f2937;
+position:sticky;
+top:0;
+}
+
+.logo{
+color:#3b82f6;
+font-weight:700;
+}
+
+nav a{
+color:#9ca3af;
+text-decoration:none;
+margin-left:12px;
+font-size:13px;
+}
+
+nav a:hover{
+color:white;
+}
+
+/* LAYOUT */
+.container{
+display:flex;
+}
+
+/* SIDEBAR */
+.sidebar{
+width:220px;
+padding:20px;
+border-right:1px solid #1f2937;
+min-height:100vh;
+}
+
+.sidebar h3{
+font-size:13px;
+color:#9ca3af;
+margin-bottom:10px;
+}
+
+.sector{
+padding:8px;
+margin-bottom:6px;
+background:#111827;
+border-radius:8px;
+cursor:pointer;
+font-size:13px;
+}
+
+.sector:hover{
+background:#1f2937;
+}
+
+/* MAIN */
+.main{
+flex:1;
+padding:20px;
+}
+
+.search{
+display:flex;
+gap:10px;
+margin-bottom:20px;
+}
+
+.search input{
+flex:1;
+padding:12px;
+border-radius:10px;
 border:1px solid #1f2937;
+background:#111827;
+color:white;
+}
+
+.search button{
+padding:12px 16px;
+border:none;
+background:#2563eb;
+color:white;
+border-radius:10px;
 cursor:pointer;
 }
 
-.score{
-font-size:20px;
-font-weight:700;
-margin-top:10px;
+/* TABLE */
+table{
+width:100%;
+border-collapse:collapse;
 }
 
-.green{color:#10b981;}
-.yellow{color:#fbbf24;}
-.red{color:#ef4444;}
+th, td{
+padding:12px;
+border-bottom:1px solid #1f2937;
+font-size:13px;
+text-align:left;
+}
+
+th{
+color:#9ca3af;
+}
+
+tr:hover{
+background:#111827;
+cursor:pointer;
+}
+
+/* SCORE COLORS */
+.green{color:#10b981;font-weight:600;}
+.yellow{color:#fbbf24;font-weight:600;}
+.red{color:#ef4444;font-weight:600;}
+
+.badge{
+padding:4px 8px;
+border-radius:6px;
+font-size:12px;
+}
+
 </style>
 </head>
 
 <body>
 
 <header>
-<div>EquityLens Market</div>
+<div class="logo">EquityLens Screener</div>
+
+<nav>
+<a href="index.html">Home</a>
+<a href="screener.html">Screener</a>
+<a href="news.html">News</a>
+<a href="groups.html">Groups</a>
+<a href="futures.html">Futures</a>
+<a href="forex.html">Forex</a>
+<a href="crypto.html">Crypto</a>
+</nav>
 </header>
 
 <div class="container">
 
-<h2 class="section-title">AI Sector Overview</h2>
+<!-- SIDEBAR -->
+<div class="sidebar">
+<h3>Settori</h3>
 
-<div class="grid">
-
-<div class="card">Tech<br><div class="score green">87/100</div></div>
-<div class="card">Finance<br><div class="score yellow">72/100</div></div>
-<div class="card">Energy<br><div class="score red">61/100</div></div>
-
+<div class="sector">Technology</div>
+<div class="sector">Healthcare</div>
+<div class="sector">Financial</div>
+<div class="sector">Energy</div>
+<div class="sector">Consumer</div>
+<div class="sector">Industrials</div>
 </div>
 
-<h2 class="section-title">Top Stocks</h2>
+<!-- MAIN -->
+<div class="main">
 
-<div class="grid">
-
-<div class="card" onclick="openStock('AAPL')">
-AAPL
-<div class="score green">92/100</div>
+<div class="search">
+<input placeholder="Cerca azione (AAPL, TSLA...)">
+<button>Search</button>
 </div>
 
-<div class="card" onclick="openStock('TSLA')">
-TSLA
-<div class="score yellow">78/100</div>
-</div>
+<table>
 
-<div class="card" onclick="openStock('NVDA')">
-NVDA
-<div class="score green">95/100</div>
-</div>
+<thead>
+<tr>
+<th>Ticker</th>
+<th>Azienda</th>
+<th>Settore</th>
+<th>Prezzo</th>
+<th>Fund</th>
+<th>Tech</th>
+<th>Momentum</th>
+<th>Sentiment</th>
+<th>Score</th>
+</tr>
+</thead>
 
-<div class="card" onclick="openStock('MSFT')">
-MSFT
-<div class="score green">90/100</div>
-</div>
+<tbody>
+
+<tr onclick="openStock('NVDA')">
+<td>NVDA</td>
+<td>NVIDIA</td>
+<td>Tech</td>
+<td>$480</td>
+<td class="green">95</td>
+<td class="green">92</td>
+<td class="green">96</td>
+<td class="green">93</td>
+<td class="green">94</td>
+</tr>
+
+<tr onclick="openStock('MSFT')">
+<td>MSFT</td>
+<td>Microsoft</td>
+<td>Tech</td>
+<td>$420</td>
+<td class="green">92</td>
+<td class="green">90</td>
+<td class="green">88</td>
+<td class="green">91</td>
+<td class="green">90</td>
+</tr>
+
+<tr onclick="openStock('AAPL')">
+<td>AAPL</td>
+<td>Apple</td>
+<td>Tech</td>
+<td>$210</td>
+<td class="yellow">85</td>
+<td class="yellow">82</td>
+<td class="yellow">80</td>
+<td class="green">88</td>
+<td class="yellow">84</td>
+</tr>
+
+<tr onclick="openStock('TSLA')">
+<td>TSLA</td>
+<td>Tesla</td>
+<td>Auto</td>
+<td>$245</td>
+<td class="yellow">78</td>
+<td class="red">70</td>
+<td class="yellow">75</td>
+<td class="yellow">72</td>
+<td class="yellow">74</td>
+</tr>
+
+</tbody>
+
+</table>
 
 </div>
 
 </div>
 
 <script>
-function openStock(symbol){
-window.location.href="stock.html?symbol="+symbol;
-}
-</script>
 
-</body>
-</html>
-symbol + " mostra forte interesse retail e momentum nel settore tech.";
+function openStock(ticker){
+window.location.href = "stock.html?ticker=" + ticker;
+}
 
 </script>
 
