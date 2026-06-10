@@ -263,119 +263,111 @@ Dashboard professionale con analisi, score proprietari e monitoraggio dei mercat
 
 <script>
 
-const API_KEY = "d8khvlhr01qjgd703rm0d8khvlhr01qjgd703rmg";
+const API_KEY = "LA_TUA_API_KEY_FINNHUB";
 
-// ======================
-// SPY (S&P 500 proxy)
-// ======================
+let lastSPX = null;
+let lastGold = null;
+let lastBTC = null;
+let lastFX = null;
+
+function updateColor(id, current, previous){
+  const el = document.getElementById(id);
+
+  if(previous === null) return;
+
+  if(current > previous){
+    el.style.color = "#10b981";
+  }else if(current < previous){
+    el.style.color = "#ef4444";
+  }
+}
 
 async function loadSP500(){
+  try{
+    const r = await fetch(
+      `https://finnhub.io/api/v1/quote?symbol=SPY&token=${API_KEY}`
+    );
+    const d = await r.json();
 
-try{
-
-const res = await fetch(
-`https://finnhub.io/api/v1/quote?symbol=SPY&token=${API_KEY}`
-);
-
-const data = await res.json();
-
-document.getElementById("spx").innerText =
-data.c.toFixed(2);
-
-}catch(e){
-
-document.getElementById("spx").innerText = "N/A";
-
+    if(d.c){
+      updateColor("spx", d.c, lastSPX);
+      document.getElementById("spx").innerText = d.c.toFixed(2);
+      lastSPX = d.c;
+    }
+  }catch(e){
+    console.log("SP500",e);
+  }
 }
-
-}
-
-// ======================
-// GOLD
-// ======================
 
 async function loadGold(){
+  try{
+    const r = await fetch(
+      `https://finnhub.io/api/v1/quote?symbol=OANDA:XAU_USD&token=${API_KEY}`
+    );
+    const d = await r.json();
 
-try{
-
-const res = await fetch(
-`https://finnhub.io/api/v1/quote?symbol=OANDA:XAU_USD&token=${API_KEY}`
-);
-
-const data = await res.json();
-
-document.getElementById("gold").innerText =
-"$ " + data.c.toFixed(2);
-
-}catch(e){
-
-document.getElementById("gold").innerText = "N/A";
-
+    if(d.c){
+      updateColor("gold", d.c, lastGold);
+      document.getElementById("gold").innerText =
+      "$ " + d.c.toFixed(2);
+      lastGold = d.c;
+    }
+  }catch(e){
+    console.log("GOLD",e);
+  }
 }
-
-}
-
-// ======================
-// BITCOIN
-// ======================
 
 async function loadBTC(){
+  try{
+    const r = await fetch(
+      "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd"
+    );
 
-try{
+    const d = await r.json();
 
-const res = await fetch(
-`https://finnhub.io/api/v1/quote?symbol=BINANCE:BTCUSDT&token=${API_KEY}`
-);
+    const price = d.bitcoin.usd;
 
-const data = await res.json();
+    updateColor("btc", price, lastBTC);
 
-document.getElementById("btc").innerText =
-"$ " + data.c.toLocaleString();
+    document.getElementById("btc").innerText =
+    "$ " + price.toLocaleString();
 
-}catch(e){
+    lastBTC = price;
 
-document.getElementById("btc").innerText = "N/A";
-
+  }catch(e){
+    console.log("BTC",e);
+  }
 }
-
-}
-
-// ======================
-// EUR/USD
-// ======================
 
 async function loadFX(){
+  try{
+    const r = await fetch(
+      "https://open.er-api.com/v6/latest/EUR"
+    );
 
-try{
+    const d = await r.json();
 
-const res = await fetch(
-`https://finnhub.io/api/v1/quote?symbol=OANDA:EUR_USD&token=${API_KEY}`
-);
+    const price = d.rates.USD;
 
-const data = await res.json();
+    updateColor("fx", price, lastFX);
 
-document.getElementById("fx").innerText =
-data.c.toFixed(4);
+    document.getElementById("fx").innerText =
+    price.toFixed(4);
 
-}catch(e){
+    lastFX = price;
 
-document.getElementById("fx").innerText = "N/A";
-
+  }catch(e){
+    console.log("FX",e);
+  }
 }
-
-}
-
-// ======================
-// UPDATE
-// ======================
 
 async function refresh(){
-
-loadSP500();
-loadGold();
-loadBTC();
-loadFX();
-
+  await Promise.all([
+    loadSP500(),
+    loadGold(),
+    loadBTC(),
+    loadFX()
+  ]);
 }
 
 refresh();
