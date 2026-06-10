@@ -263,44 +263,74 @@ Dashboard professionale con analisi, score proprietari e monitoraggio dei mercat
 
 <script>
 
-let spx = 6050;
-let spTrend = 0;
+const API_KEY = "d8khvlhr01qjgd703rm0d8khvlhr01qjgd703rmg";
 
-let gold = 3350;
-let goldTrend = 0;
+// ======================
+// SPY (S&P 500 proxy)
+// ======================
 
-function updateSPX(){
+async function loadSP500(){
 
-spTrend += (Math.random()-0.5)*0.30;
-spx += spTrend;
+try{
+
+const res = await fetch(
+`https://finnhub.io/api/v1/quote?symbol=SPY&token=${API_KEY}`
+);
+
+const data = await res.json();
 
 document.getElementById("spx").innerText =
-spx.toFixed(2);
+data.c.toFixed(2);
+
+}catch(e){
+
+document.getElementById("spx").innerText = "N/A";
 
 }
 
-function updateGold(){
+}
 
-goldTrend += (Math.random()-0.5)*0.40;
-gold += goldTrend;
+// ======================
+// GOLD
+// ======================
+
+async function loadGold(){
+
+try{
+
+const res = await fetch(
+`https://finnhub.io/api/v1/quote?symbol=OANDA:XAU_USD&token=${API_KEY}`
+);
+
+const data = await res.json();
 
 document.getElementById("gold").innerText =
-"$ " + gold.toFixed(2);
+"$ " + data.c.toFixed(2);
+
+}catch(e){
+
+document.getElementById("gold").innerText = "N/A";
 
 }
+
+}
+
+// ======================
+// BITCOIN
+// ======================
 
 async function loadBTC(){
 
 try{
 
-const r = await fetch(
-"https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd"
+const res = await fetch(
+`https://finnhub.io/api/v1/quote?symbol=BINANCE:BTCUSDT&token=${API_KEY}`
 );
 
-const d = await r.json();
+const data = await res.json();
 
 document.getElementById("btc").innerText =
-"$ " + d.bitcoin.usd.toLocaleString();
+"$ " + data.c.toLocaleString();
 
 }catch(e){
 
@@ -310,18 +340,22 @@ document.getElementById("btc").innerText = "N/A";
 
 }
 
+// ======================
+// EUR/USD
+// ======================
+
 async function loadFX(){
 
 try{
 
-const r = await fetch(
-"https://open.er-api.com/v6/latest/EUR"
+const res = await fetch(
+`https://finnhub.io/api/v1/quote?symbol=OANDA:EUR_USD&token=${API_KEY}`
 );
 
-const d = await r.json();
+const data = await res.json();
 
 document.getElementById("fx").innerText =
-d.rates.USD.toFixed(4);
+data.c.toFixed(4);
 
 }catch(e){
 
@@ -331,16 +365,22 @@ document.getElementById("fx").innerText = "N/A";
 
 }
 
-updateSPX();
-updateGold();
+// ======================
+// UPDATE
+// ======================
+
+async function refresh(){
+
+loadSP500();
+loadGold();
 loadBTC();
 loadFX();
 
-setInterval(updateSPX,1500);
-setInterval(updateGold,1500);
+}
 
-setInterval(loadBTC,15000);
-setInterval(loadFX,15000);
+refresh();
+
+setInterval(refresh,15000);
 
 </script>
 
