@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="it">
 <head>
 <meta charset="UTF-8">
@@ -10,14 +11,11 @@
 
 <style>
 
-/* =======================
-   RESET BASE
-======================= */
 *{
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:Inter;
+font-family:Inter,sans-serif;
 }
 
 body{
@@ -25,14 +23,11 @@ background:#0b0f14;
 color:white;
 }
 
-/* =======================
-   HEADER CLEAN
-======================= */
 header{
 display:flex;
 justify-content:space-between;
 align-items:center;
-padding:14px 40px;
+padding:16px 40px;
 background:#111827;
 border-bottom:1px solid #1f2937;
 position:sticky;
@@ -56,7 +51,7 @@ nav a{
 font-size:13px;
 color:#9ca3af;
 text-decoration:none;
-padding:6px 10px;
+padding:8px 12px;
 border-radius:8px;
 transition:0.2s;
 }
@@ -66,70 +61,63 @@ background:#1f2937;
 color:white;
 }
 
-/* =======================
-   HERO
-======================= */
 .hero{
-padding:70px 40px 30px;
-max-width:900px;
+padding:80px 40px 40px;
+max-width:1000px;
 }
 
 .hero h1{
-font-size:52px;
-margin-bottom:10px;
+font-size:58px;
+line-height:1.05;
+margin-bottom:12px;
 }
 
 .hero p{
-color:#9ca3af;
 font-size:18px;
-max-width:600px;
-line-height:1.5;
-margin-bottom:25px;
+color:#9ca3af;
+line-height:1.6;
+max-width:700px;
+margin-bottom:30px;
 }
 
-/* SEARCH */
 .search{
 display:flex;
-gap:10px;
-max-width:600px;
+gap:12px;
+max-width:650px;
 }
 
 .search input{
 flex:1;
-padding:14px;
-border-radius:12px;
-border:1px solid #1f2937;
+padding:15px;
 background:#111827;
+border:1px solid #1f2937;
+border-radius:12px;
 color:white;
-outline:none;
 }
 
 .search button{
-padding:14px 16px;
+padding:15px 20px;
 border:none;
 border-radius:12px;
-background:#3b82f6;
+background:#2563eb;
 color:white;
 font-weight:600;
 cursor:pointer;
 }
 
-/* =======================
-   MARKET GRID
-======================= */
 .market{
 display:grid;
 grid-template-columns:repeat(4,1fr);
-gap:12px;
-padding:40px;
+gap:15px;
+padding:0 40px 40px;
 }
 
 .card{
 background:#111827;
 border:1px solid #1f2937;
-border-radius:12px;
-padding:16px;
-transition:0.2s;
+border-radius:14px;
+padding:18px;
+transition:.2s;
 }
 
 .card:hover{
@@ -140,42 +128,59 @@ border-color:#3b82f6;
 .card h4{
 font-size:13px;
 color:#9ca3af;
-margin-bottom:6px;
+margin-bottom:8px;
 }
 
 .price{
-font-size:18px;
-font-weight:600;
+font-size:20px;
+font-weight:700;
+color:#10b981;
 }
 
-.green{color:#10b981;}
-
-/* =======================
-   CTA
-======================= */
 .cta{
+padding:50px;
 text-align:center;
-padding:50px 20px;
 }
 
 .cta h2{
-font-size:24px;
-margin-bottom:8px;
+font-size:28px;
+margin-bottom:10px;
 }
 
 .cta p{
 color:#9ca3af;
 }
 
-/* =======================
-   FOOTER
-======================= */
 footer{
-text-align:center;
 padding:30px;
-font-size:13px;
+text-align:center;
 color:#6b7280;
 border-top:1px solid #1f2937;
+font-size:13px;
+}
+
+@media(max-width:900px){
+
+.market{
+grid-template-columns:1fr 1fr;
+}
+
+.hero h1{
+font-size:42px;
+}
+
+}
+
+@media(max-width:600px){
+
+.market{
+grid-template-columns:1fr;
+}
+
+.search{
+flex-direction:column;
+}
+
 }
 
 </style>
@@ -184,7 +189,6 @@ border-top:1px solid #1f2937;
 
 <body>
 
-<!-- HEADER -->
 <header>
 
 <div class="logo">EquityLens</div>
@@ -201,111 +205,145 @@ border-top:1px solid #1f2937;
 
 </header>
 
-<!-- HERO -->
 <section class="hero">
 
 <h1>Investing Intelligence Platform</h1>
 
 <p>
-Analisi azioni, mercati globali e dati finanziari in tempo reale.
-Una piattaforma moderna per investitori retail.
+Analisi azioni, dati finanziari e monitoraggio dei mercati globali.
+Costruito per investitori retail che vogliono strumenti professionali.
 </p>
 
 <div class="search">
-<input placeholder="Cerca azioni (AAPL, TSLA, NVDA)">
-<button onclick="window.location.href='screener.html'">Cerca</button>
+<input placeholder="Cerca azioni (AAPL, TSLA, NVDA...)">
+<button onclick="window.location.href='screener.html'">
+Cerca Azioni
+</button>
 </div>
 
 </section>
 
-<!-- MARKET -->
 <section class="market">
 
 <div class="card">
 <h4>S&P 500</h4>
-<div class="price green" id="spx">Loading...</div>
+<div class="price" id="spx">Loading...</div>
 </div>
 
 <div class="card">
-<h4>NASDAQ</h4>
-<div class="price green" id="ndx">Loading...</div>
+<h4>Gold (XAU/USD)</h4>
+<div class="price" id="gold">Loading...</div>
 </div>
 
 <div class="card">
 <h4>Bitcoin</h4>
-<div class="price green" id="btc">Loading...</div>
+<div class="price" id="btc">Loading...</div>
 </div>
 
 <div class="card">
 <h4>EUR/USD</h4>
-<div class="price green" id="fx">Loading...</div>
+<div class="price" id="fx">Loading...</div>
 </div>
 
 </section>
 
-<!-- CTA -->
 <section class="cta">
+
 <h2>Dati di mercato in tempo reale</h2>
-<p>Analisi automatica, prezzi live e dashboard professionale.</p>
+
+<p>
+Dashboard professionale con analisi, score proprietari e monitoraggio dei mercati.
+</p>
+
 </section>
 
-<!-- FOOTER -->
 <footer>
-© 2025 EquityLens
+© 2025 EquityLens — Financial Intelligence Platform
 </footer>
 
 <script>
 
-/* =======================
-   SIMULAZIONE INDICI
-======================= */
-let spx = 4800;
-let ndx = 15000;
-let trend1 = 0;
-let trend2 = 0;
+let spx = 6050;
+let spTrend = 0;
 
-function updateMarkets(){
+let gold = 3350;
+let goldTrend = 0;
 
-trend1 += (Math.random()-0.5)*0.35;
-trend2 += (Math.random()-0.5)*0.45;
+function updateSPX(){
 
-spx += trend1;
-ndx += trend2;
+spTrend += (Math.random()-0.5)*0.30;
+spx += spTrend;
 
-document.getElementById("spx").innerText = spx.toFixed(2);
-document.getElementById("ndx").innerText = ndx.toFixed(2);
+document.getElementById("spx").innerText =
+spx.toFixed(2);
 
 }
 
-/* =======================
-   BITCOIN LIVE
-======================= */
-async function btc(){
-const r = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd");
+function updateGold(){
+
+goldTrend += (Math.random()-0.5)*0.40;
+gold += goldTrend;
+
+document.getElementById("gold").innerText =
+"$ " + gold.toFixed(2);
+
+}
+
+async function loadBTC(){
+
+try{
+
+const r = await fetch(
+"https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd"
+);
+
 const d = await r.json();
-document.getElementById("btc").innerText = "$ " + d.bitcoin.usd.toLocaleString();
+
+document.getElementById("btc").innerText =
+"$ " + d.bitcoin.usd.toLocaleString();
+
+}catch(e){
+
+document.getElementById("btc").innerText = "N/A";
+
 }
 
-/* =======================
-   EUR/USD LIVE
-======================= */
-async function fx(){
-const r = await fetch("https://api.frankfurter.app/latest?from=EUR&to=USD");
+}
+
+async function loadFX(){
+
+try{
+
+const r = await fetch(
+"https://open.er-api.com/v6/latest/EUR"
+);
+
 const d = await r.json();
-document.getElementById("fx").innerText = d.rates.USD.toFixed(4);
+
+document.getElementById("fx").innerText =
+d.rates.USD.toFixed(4);
+
+}catch(e){
+
+document.getElementById("fx").innerText = "N/A";
+
 }
 
-/* START */
-updateMarkets();
-btc();
-fx();
+}
 
-/* LOOP LIVE */
-setInterval(updateMarkets, 1200);
-setInterval(btc, 8000);
-setInterval(fx, 10000);
+updateSPX();
+updateGold();
+loadBTC();
+loadFX();
+
+setInterval(updateSPX,1500);
+setInterval(updateGold,1500);
+
+setInterval(loadBTC,15000);
+setInterval(loadFX,15000);
 
 </script>
 
 </body>
 </html>
+
