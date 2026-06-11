@@ -1,1 +1,310 @@
-bho
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>EquityLens Stock Analysis</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<script src="https://s3.tradingview.com/tv.js"></script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Inter,sans-serif;
+}
+
+body{
+background:#0b0f14;
+color:white;
+}
+
+header{
+background:#111827;
+padding:16px 30px;
+border-bottom:1px solid #1f2937;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.logo{
+font-weight:700;
+font-size:18px;
+color:#3b82f6;
+}
+
+nav a{
+color:#9ca3af;
+text-decoration:none;
+margin-left:15px;
+}
+
+.container{
+max-width:1400px;
+margin:auto;
+padding:30px;
+}
+
+.top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:25px;
+}
+
+.price{
+font-size:38px;
+font-weight:700;
+}
+
+.change{
+font-size:18px;
+margin-top:5px;
+}
+
+.green{
+color:#10b981;
+}
+
+.red{
+color:#ef4444;
+}
+
+.grid{
+display:grid;
+grid-template-columns:2fr 1fr;
+gap:20px;
+}
+
+.card{
+background:#111827;
+border:1px solid #1f2937;
+border-radius:14px;
+padding:20px;
+}
+
+.card h3{
+margin-bottom:15px;
+}
+
+.metrics{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+}
+
+.metric{
+background:#0f172a;
+padding:12px;
+border-radius:10px;
+}
+
+.metric span{
+display:block;
+font-size:12px;
+color:#9ca3af;
+margin-bottom:5px;
+}
+
+.score{
+font-size:32px;
+font-weight:700;
+color:#3b82f6;
+}
+
+#chart{
+height:600px;
+}
+
+</style>
+</head>
+<body>
+
+<header>
+<div class="logo">EquityLens</div>
+
+<nav>
+<a href="index.html">Home</a>
+<a href="screener.html">Screener</a>
+</nav>
+</header>
+
+<div class="container">
+
+<div class="top">
+
+<div>
+<h1 id="ticker">Loading...</h1>
+<div class="price" id="price">--</div>
+<div class="change" id="change">--</div>
+</div>
+
+<div class="score">
+Score 85/100
+</div>
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+
+<h3>Grafico</h3>
+
+<div id="chart"></div>
+
+</div>
+
+<div>
+
+<div class="card">
+
+<h3>Analisi Tecnica</h3>
+
+<p>Trend: Bullish</p>
+<p>RSI: 62</p>
+<p>MACD: Positive</p>
+<p>Supporto: 205</p>
+<p>Resistenza: 218</p>
+
+</div>
+
+<br>
+
+<div class="card">
+
+<h3>Fundamentals</h3>
+
+<div class="metrics">
+
+<div class="metric">
+<span>Market Cap</span>
+<div id="marketCap">--</div>
+</div>
+
+<div class="metric">
+<span>P/E</span>
+<div id="pe">--</div>
+</div>
+
+<div class="metric">
+<span>EPS</span>
+<div id="eps">--</div>
+</div>
+
+<div class="metric">
+<span>52W High</span>
+<div id="high52">--</div>
+</div>
+
+<div class="metric">
+<span>52W Low</span>
+<div id="low52">--</div>
+</div>
+
+<div class="metric">
+<span>Shares</span>
+<div id="shares">--</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const API_KEY = "d8khvlhr01qjgd703rm0d8khvlhr01qjgd703rmg";
+
+const params = new URLSearchParams(window.location.search);
+
+const symbol = params.get("symbol") || "AAPL";
+
+document.getElementById("ticker").innerText = symbol;
+
+async function loadQuote(){
+
+try{
+
+const r = await fetch(
+`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${API_KEY}`
+);
+
+const d = await r.json();
+
+document.getElementById("price").innerText =
+"$" + d.c.toFixed(2);
+
+const change = d.dp.toFixed(2);
+
+const el = document.getElementById("change");
+
+el.innerText = change + "%";
+
+if(change >= 0){
+el.className = "change green";
+}else{
+el.className = "change red";
+}
+
+}catch(e){
+console.log(e);
+}
+
+}
+
+async function loadProfile(){
+
+try{
+
+const r = await fetch(
+`https://finnhub.io/api/v1/stock/profile2?symbol=${symbol}&token=${API_KEY}`
+);
+
+const d = await r.json();
+
+document.getElementById("marketCap").innerText =
+d.marketCapitalization
+? "$" + d.marketCapitalization.toLocaleString() + "M"
+: "--";
+
+document.getElementById("shares").innerText =
+d.shareOutstanding || "--";
+
+}catch(e){
+console.log(e);
+}
+
+}
+
+new TradingView.widget({
+autosize:true,
+symbol:"NASDAQ:"+symbol,
+interval:"D",
+timezone:"Etc/UTC",
+theme:"dark",
+style:"1",
+locale:"it",
+container_id:"chart"
+});
+
+loadQuote();
+loadProfile();
+
+setInterval(loadQuote,15000);
+
+</script>
+
+</body>
+</html>
