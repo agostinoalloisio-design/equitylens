@@ -8,13 +8,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter;}
 
 body{
 background:#0b0f14;
 color:white;
-  <h1 style="color:red">NUOVO SCREENER EQUITYLENS</h1>
 }
 
 /* HEADER */
@@ -99,16 +97,13 @@ font-size:13px;
 text-align:left;
 }
 
-th{
-color:#9ca3af;
-}
+th{color:#9ca3af;}
 
 tr:hover{
 background:#111827;
 cursor:pointer;
 }
 
-/* COLORS */
 .green{color:#10b981;font-weight:600;}
 .yellow{color:#fbbf24;font-weight:600;}
 .red{color:#ef4444;font-weight:600;}
@@ -118,9 +113,7 @@ cursor:pointer;
 
 <body>
 
-<!-- HEADER -->
 <header>
-
 <div class="logo">EquityLens</div>
 
 <nav>
@@ -132,28 +125,22 @@ cursor:pointer;
 <a href="forex.html">Forex</a>
 <a href="crypto.html">Crypto</a>
 </nav>
-
 </header>
 
 <div class="container">
 
-<!-- SIDEBAR -->
 <div class="sidebar">
-
 <div class="sector" onclick="filter('all')">📊 All</div>
 <div class="sector" onclick="filter('Tech')">💻 Tech</div>
 <div class="sector" onclick="filter('Finance')">🏦 Finance</div>
 <div class="sector" onclick="filter('Health')">🧬 Health</div>
 <div class="sector" onclick="filter('Energy')">⚡ Energy</div>
 <div class="sector" onclick="filter('Consumer')">🛒 Consumer</div>
-
 </div>
 
-<!-- MAIN -->
 <div class="main">
 
 <table>
-
 <thead>
 <tr>
 <th>Ticker</th>
@@ -169,7 +156,6 @@ cursor:pointer;
 </thead>
 
 <tbody id="table"></tbody>
-
 </table>
 
 </div>
@@ -178,14 +164,10 @@ cursor:pointer;
 
 <script>
 
-const API = "INSERISCI_LA_TUA_API_KEY";
-
-let filterState = "all";
-
 const stocks = [
-{t:"NVDA",n:"NVIDIA",s:"Tech"},
-{t:"MSFT",n:"Microsoft",s:"Tech"},
 {t:"AAPL",n:"Apple",s:"Tech"},
+{t:"MSFT",n:"Microsoft",s:"Tech"},
+{t:"NVDA",n:"NVIDIA",s:"Tech"},
 {t:"GOOGL",n:"Google",s:"Tech"},
 {t:"META",n:"Meta",s:"Tech"},
 {t:"AMD",n:"AMD",s:"Tech"},
@@ -193,43 +175,20 @@ const stocks = [
 {t:"JPM",n:"JPMorgan",s:"Finance"},
 {t:"V",n:"Visa",s:"Finance"},
 {t:"MA",n:"Mastercard",s:"Finance"},
-{t:"GS",n:"Goldman",s:"Finance"},
 
 {t:"JNJ",n:"Johnson",s:"Health"},
 {t:"PFE",n:"Pfizer",s:"Health"},
-{t:"UNH",n:"UnitedHealth",s:"Health"},
 
 {t:"XOM",n:"Exxon",s:"Energy"},
 {t:"CVX",n:"Chevron",s:"Energy"},
 
-{t:"AMZN",n:"Amazon",s:"Consumer"},
 {t:"TSLA",n:"Tesla",s:"Consumer"},
-{t:"NKE",n:"Nike",s:"Consumer"},
-{t:"MCD",n:"McDonalds",s:"Consumer"},
+{t:"AMZN",n:"Amazon",s:"Consumer"},
 ];
 
-// prezzi live cache
-let priceData = {};
+let filterState = "all";
 
-async function loadPrice(symbol){
-
-try{
-
-const r = await fetch(
-`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${API}`
-);
-
-const d = await r.json();
-
-priceData[symbol] = d.c;
-
-}catch(e){
-
-priceData[symbol] = null;
-
-}
-
-}
+let prices = {};
 
 function score(){
 return Math.floor(70 + Math.random()*25);
@@ -241,22 +200,36 @@ if(v>=70) return "yellow";
 return "red";
 }
 
-async function render(){
+async function loadPrices(){
+
+for(let s of stocks){
+try{
+const r = await fetch(`https://finnhub.io/api/v1/quote?symbol=${s.t}&token=YOUR_API_KEY`);
+const d = await r.json();
+prices[s.t] = d.c;
+}catch(e){
+prices[s.t] = 0;
+}
+}
+
+render();
+}
+
+function openStock(symbol){
+localStorage.setItem("selectedStock", symbol);
+window.location.href = "stock.html";
+}
+
+function render(){
 
 const table = document.getElementById("table");
 table.innerHTML = "";
-
-// carica prezzi
-for(let s of stocks){
-await loadPrice(s.t);
-}
 
 stocks
 .filter(s => filterState==="all" || s.s===filterState)
 .forEach(s=>{
 
-let p = priceData[s.t] || 0;
-
+let p = prices[s.t] || 0;
 let sc = score();
 
 table.innerHTML += `
@@ -272,7 +245,6 @@ table.innerHTML += `
 <td class="${color(sc)}">${sc}</td>
 </tr>
 `;
-
 });
 
 }
@@ -282,17 +254,10 @@ filterState = f;
 render();
 }
 
-function openStock(t){
-window.location.href = "stock.html?ticker=" + t;
-}
-
-// auto refresh
-render();
-setInterval(render, 20000);
+loadPrices();
+setInterval(loadPrices, 15000);
 
 </script>
 
-</body>
-</html>
 </body>
 </html>
