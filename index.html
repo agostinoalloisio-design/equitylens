@@ -4,13 +4,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>EquityLens</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-
 *{
 margin:0;
 padding:0;
@@ -53,7 +51,7 @@ color:#9ca3af;
 text-decoration:none;
 padding:8px 12px;
 border-radius:8px;
-transition:0.2s;
+transition:.2s;
 }
 
 nav a:hover{
@@ -160,7 +158,6 @@ font-size:13px;
 }
 
 @media(max-width:900px){
-
 .market{
 grid-template-columns:1fr 1fr;
 }
@@ -168,11 +165,9 @@ grid-template-columns:1fr 1fr;
 .hero h1{
 font-size:42px;
 }
-
 }
 
 @media(max-width:600px){
-
 .market{
 grid-template-columns:1fr;
 }
@@ -180,9 +175,7 @@ grid-template-columns:1fr;
 .search{
 flex-direction:column;
 }
-
 }
-
 </style>
 
 </head>
@@ -190,7 +183,6 @@ flex-direction:column;
 <body>
 
 <header>
-
 <div class="logo">EquityLens</div>
 
 <nav>
@@ -202,11 +194,9 @@ flex-direction:column;
 <a href="forex.html">Forex</a>
 <a href="crypto.html">Crypto</a>
 </nav>
-
 </header>
 
 <section class="hero">
-
 <h1>Investing Intelligence Platform</h1>
 
 <p>
@@ -220,18 +210,17 @@ Costruito per investitori retail che vogliono strumenti professionali.
 Cerca Azioni
 </button>
 </div>
-
 </section>
 
 <section class="market">
 
 <div class="card">
-<h4>S&P 500</h4>
+<h4>SPY ETF</h4>
 <div class="price" id="spx">Loading...</div>
 </div>
 
 <div class="card">
-<h4>Gold (XAU/USD)</h4>
+<h4>Gold ETF (GLD)</h4>
 <div class="price" id="gold">Loading...</div>
 </div>
 
@@ -248,126 +237,124 @@ Cerca Azioni
 </section>
 
 <section class="cta">
-
 <h2>Dati di mercato in tempo reale</h2>
-
 <p>
 Dashboard professionale con analisi, score proprietari e monitoraggio dei mercati.
 </p>
-
 </section>
 
 <footer>
-© 2025 EquityLens — Financial Intelligence Platform
+© 2026 EquityLens — Financial Intelligence Platform
 </footer>
 
 <script>
 
-const API_KEY = "LA_TUA_API_KEY_FINNHUB";
+const API_KEY = "d8khvlhr01qjgd703rm0d8khvlhr01qjgd703rmg";
 
 let lastSPX = null;
 let lastGold = null;
 let lastBTC = null;
 let lastFX = null;
 
-function updateColor(id, current, previous){
-  const el = document.getElementById(id);
+function updateColor(id,current,previous){
+const el=document.getElementById(id);
 
-  if(previous === null) return;
+if(previous===null)return;
 
-  if(current > previous){
-    el.style.color = "#10b981";
-  }else if(current < previous){
-    el.style.color = "#ef4444";
-  }
+if(current>previous){
+el.style.color="#10b981";
+}else if(current<previous){
+el.style.color="#ef4444";
+}
 }
 
 async function loadSP500(){
-  try{
-    const r = await fetch(
-      `https://finnhub.io/api/v1/quote?symbol=SPY&token=${API_KEY}`
-    );
-    const d = await r.json();
+try{
+const r=await fetch(
+`https://finnhub.io/api/v1/quote?symbol=SPY&token=${API_KEY}`
+);
 
-    if(d.c){
-      updateColor("spx", d.c, lastSPX);
-      document.getElementById("spx").innerText = d.c.toFixed(2);
-      lastSPX = d.c;
-    }
-  }catch(e){
-    console.log("SP500",e);
-  }
+const d=await r.json();
+
+if(d.c){
+updateColor("spx",d.c,lastSPX);
+document.getElementById("spx").innerText="$ "+d.c.toFixed(2);
+lastSPX=d.c;
+}
+}catch(e){
+console.log(e);
+}
 }
 
 async function loadGold(){
-  try{
-    const r = await fetch(
-      `https://finnhub.io/api/v1/quote?symbol=OANDA:XAU_USD&token=${API_KEY}`
-    );
-    const d = await r.json();
+try{
+const r=await fetch(
+`https://finnhub.io/api/v1/quote?symbol=GLD&token=${API_KEY}`
+);
 
-    if(d.c){
-      updateColor("gold", d.c, lastGold);
-      document.getElementById("gold").innerText =
-      "$ " + d.c.toFixed(2);
-      lastGold = d.c;
-    }
-  }catch(e){
-    console.log("GOLD",e);
-  }
+const d=await r.json();
+
+if(d.c){
+updateColor("gold",d.c,lastGold);
+document.getElementById("gold").innerText="$ "+d.c.toFixed(2);
+lastGold=d.c;
+}
+}catch(e){
+console.log(e);
+}
 }
 
 async function loadBTC(){
-  try{
-    const r = await fetch(
-      "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd"
-    );
+try{
+const r=await fetch(
+"https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd"
+);
 
-    const d = await r.json();
+const d=await r.json();
 
-    const price = d.bitcoin.usd;
+const price=d.bitcoin.usd;
 
-    updateColor("btc", price, lastBTC);
+updateColor("btc",price,lastBTC);
 
-    document.getElementById("btc").innerText =
-    "$ " + price.toLocaleString();
+document.getElementById("btc").innerText=
+"$ "+price.toLocaleString();
 
-    lastBTC = price;
+lastBTC=price;
 
-  }catch(e){
-    console.log("BTC",e);
-  }
+}catch(e){
+console.log(e);
+}
 }
 
 async function loadFX(){
-  try{
-    const r = await fetch(
-      "https://open.er-api.com/v6/latest/EUR"
-    );
+try{
+const r=await fetch(
+"https://open.er-api.com/v6/latest/EUR"
+);
 
-    const d = await r.json();
+const d=await r.json();
 
-    const price = d.rates.USD;
+const price=d.rates.USD;
 
-    updateColor("fx", price, lastFX);
+updateColor("fx",price,lastFX);
 
-    document.getElementById("fx").innerText =
-    price.toFixed(4);
+document.getElementById("fx").innerText=
+price.toFixed(4);
 
-    lastFX = price;
+lastFX=price;
 
-  }catch(e){
-    console.log("FX",e);
-  }
+}catch(e){
+console.log(e);
+}
 }
 
 async function refresh(){
-  await Promise.all([
-    loadSP500(),
-    loadGold(),
-    loadBTC(),
-    loadFX()
-  ]);
+await Promise.all([
+loadSP500(),
+loadGold(),
+loadBTC(),
+loadFX()
+]);
 }
 
 refresh();
@@ -378,4 +365,5 @@ setInterval(refresh,15000);
 
 </body>
 </html>
+
 
